@@ -1,0 +1,9 @@
+Date: Wed, 26 Nov 2014 22:26:29 GMT
+Server: Apache
+Transfer-Encoding: chunked
+Content-Type: application/xml; charset=utf-8; someOtherRandom="header in here"
+
+<?xml version='1.0' encoding='utf-8' ?>
+<foo>
+  <bar content="äöüßÄÖÜ"/>
+</foo>

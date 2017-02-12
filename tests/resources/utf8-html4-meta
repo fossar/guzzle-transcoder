@@ -1,0 +1,17 @@
+Date: Wed, 26 Nov 2014 22:26:29 GMT
+Server: Apache
+Vary: Accept-Encoding
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=iso-8859-1; someOtherRandom="header in here"
+
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta http-equiv='content-TYPE' content='text/html; foo=bar; charset=utf-8; bar=baz'>
+            <title>Umlauts everywhere öäüßÖÄÜ</title>
+        </head>
+        <body>
+            <h1>öäüßÖÄÜ</h1>
+            
+        </body>
+    </html>
