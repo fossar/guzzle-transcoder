@@ -8,7 +8,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class GuzzleTranscoder {
-    /** @var Transcoder */
+    /** @var ?Transcoder */
     private $transcoder;
 
     /** @var string */
@@ -29,10 +29,23 @@ class GuzzleTranscoder {
      *  - bool   replaceContent: Whether charset declarations in the body (meta tags, XML declaration) should be updated (default: false)
      */
     public function __construct(array $options = []) {
-        $this->transcoder = Transcoder::create();
+        $this->transcoder = null;
         $this->targetEncoding = isset($options['targetEncoding']) ? $options['targetEncoding'] : 'utf-8';
         $this->replaceHeaders = isset($options['replaceHeaders']) ? $options['replaceHeaders'] : true;
         $this->replaceContent = isset($options['replaceContent']) ? $options['replaceContent'] : false;
+    }
+
+    /**
+     * Returns a transcoder instance.
+     *
+     * @return Transcoder
+     */
+    private function createTranscoder() {
+        if ($this->transcoder === null) {
+            $this->transcoder = Transcoder::create();
+        }
+
+        return $this->transcoder;
     }
 
     public function convert(ResponseInterface $response) {
@@ -165,7 +178,7 @@ class GuzzleTranscoder {
             }
         }
 
-        $converted = $this->transcoder->transcode($content, $finalEncoding, $this->targetEncoding);
+        $converted = $this->createTranscoder()->transcode($content, $finalEncoding, $this->targetEncoding);
         $converted_new = $converted;
         if ($this->replaceContent) {
             if ($replacements['content'] !== null) {
