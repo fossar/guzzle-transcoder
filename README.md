@@ -1,17 +1,15 @@
 # guzzle-transcoder
 
-This [Guzzle] plug-in converts documents obtained by Guzzle to UTF-8 using [Transcoder] library. It is largely based on Pascal Landau’s [guzzle-auto-charset-encoding-subscriber] and [web-utility] libraries. Thanks to Transcoder, when mbsting is not available iconv will be used. Additionally we still support PHP 5.4.
+This [Guzzle] plug-in converts documents obtained by Guzzle to UTF-8 using [Transcoder] library. It is largely based on Pascal Landau’s [guzzle-auto-charset-encoding-subscriber] and [web-utility] libraries. Thanks to Transcoder, when mbsting is not available iconv will be used.
 
 ## Basic usage
 
 ```php
 use Fossar\GuzzleTranscoder\GuzzleTranscoder;
 use GuzzleHttp\Client;
-use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 
-$stack = new HandlerStack();
-$stack->setHandler(new CurlHandler());
+$stack = HandlerStack::create();
 $stack->push(GuzzleTranscoder::create_middleware());
 $client = new Client(['handler' => $stack]);
 
