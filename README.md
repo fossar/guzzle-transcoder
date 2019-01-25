@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
 $stack = HandlerStack::create();
-$stack->push(GuzzleTranscoder::create_middleware());
+$stack->push(new GuzzleTranscoder);
 $client = new Client(['handler' => $stack]);
 
 $url = 'https://www.myseosolution.de/scripts/encoding-test.php?enc=iso'; // request website with iso-8859-1 encoding

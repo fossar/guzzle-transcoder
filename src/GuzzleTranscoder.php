@@ -3,8 +3,8 @@
 namespace Fossar\GuzzleTranscoder;
 
 use Ddeboer\Transcoder\Transcoder;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class GuzzleTranscoder {
@@ -59,14 +59,20 @@ class GuzzleTranscoder {
     }
 
     /**
-     * @param array $options
+     * Called when the middleware is handled by the client.
+     *
+     * @param callable $handler
+     *
+     * @return Closure
      */
-    public static function create_middleware(array $options = []) {
-        $transcoder = new self($options);
+    public function __invoke(callable $handler) {
+        return function(RequestInterface $request, array $options) use ($handler) {
+            $promise = $handler($request, $options);
 
-        return Middleware::mapResponse(function(ResponseInterface $response) use ($transcoder) {
-            return $transcoder->convert($response);
-        });
+            return $promise->then(function(ResponseInterface $response) {
+                return $this->convert($response);
+            });
+        };
     }
 
     /**

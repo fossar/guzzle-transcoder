@@ -132,26 +132,26 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
         $enc = mb_internal_encoding();
 
         $converters = [
-            'none' => [
+            'none' => new GuzzleTranscoder([
                 'targetEncoding' => $enc,
                 'replaceHeaders' => false,
                 'replaceContent' => false,
-            ],
-            'header' => [
+            ]),
+            'header' => new GuzzleTranscoder([
                 'targetEncoding' => $enc,
                 'replaceHeaders' => true,
                 'replaceContent' => false,
-            ],
-            'header-meta' => [
+            ]),
+            'header-meta' => new GuzzleTranscoder([
                 'targetEncoding' => $enc,
                 'replaceHeaders' => true,
                 'replaceContent' => true,
-            ],
-            'meta' => [
+            ]),
+            'meta' => new GuzzleTranscoder([
                 'targetEncoding' => $enc,
                 'replaceHeaders' => false,
                 'replaceContent' => true,
-            ],
+            ]),
         ];
 
         foreach ($expected as $converterType => $expected) {
@@ -159,7 +159,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
                 $input,
             ]);
             $stack = HandlerStack::create($mock);
-            $stack->push(GuzzleTranscoder::create_middleware($converters[$converterType]));
+            $stack->push($converters[$converterType]);
             $client = new Client(['handler' => $stack]);
 
             /** @var ResponseInterface $response */
