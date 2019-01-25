@@ -3,18 +3,20 @@
     "description": "Guzzle plugin that converts responses to UTF-8",
     "type": "library",
     "require": {
-        "guzzlehttp/guzzle": "^5.3",
-        "ddeboer/transcoder": "^1.0"
+        "guzzlehttp/guzzle": "^6.3",
+        "ddeboer/transcoder": "^1.0",
+        "guzzlehttp/psr7": "^1.5"
     },
     "require-dev" : {
-        "phpunit/phpunit": "~5 || ~4",
-        "jakub-onderka/php-parallel-lint": "^0.9.2"
+        "friendsofphp/php-cs-fixer": "^2.14",
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "symfony/phpunit-bridge": "~2.6|~3.0|~4.0"
     },
     "autoload": {
         "psr-4": { "Fossar\\GuzzleTranscoder\\": "src/" }
     },
      "autoload-dev": {
-            "psr-4": { "Fossar\\GuzzleTranscoder\\Tests\\": "tests/" }
+        "psr-4": { "Fossar\\GuzzleTranscoder\\Tests\\": "tests/" }
     },
     "license": "MIT",
     "authors": [

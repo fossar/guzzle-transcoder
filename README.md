@@ -5,13 +5,17 @@ This [Guzzle] plug-in converts documents obtained by Guzzle to UTF-8 using [Tran
 ## Basic usage
 
 ```php
-use GuzzleHttp\Client;
 use Fossar\GuzzleTranscoder\GuzzleTranscoder;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
 
-$client = new Client();
-$sub = new GuzzleTranscoder();
-$client->getEmitter()->attach($sub);
-$url = 'http://www.myseosolution.de/scripts/encoding-test.php?enc=iso'; // request website with iso-8859-1 encoding
+$stack = new HandlerStack();
+$stack->setHandler(new CurlHandler());
+$stack->push(GuzzleTranscoder::create_middleware());
+$client = new Client(['handler' => $stack]);
+
+$url = 'https://www.myseosolution.de/scripts/encoding-test.php?enc=iso'; // request website with iso-8859-1 encoding
 $req = $client->get($url);
 echo $req->getBody();
 ```

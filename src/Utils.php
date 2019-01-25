@@ -4,7 +4,7 @@ namespace Fossar\GuzzleTranscoder;
 
 class Utils {
     /**
-     * HTTP Headers Util 0.1
+     * HTTP Headers Util 0.1.
      *
      * @author: Keyvan Minoukadeh - hide@address.com - http://www.keyvan.net
      *
@@ -26,7 +26,7 @@ class Utils {
      * "=".  A list of space separated tokens are parsed as if they were
      * separated by ";".
      *
-     * If the $header_values passed as argument contains multiple values,
+     * If the $headerValues passed as argument contains multiple values,
      * then they are treated as if they were a single value separated by
      * comma ",".
      *
@@ -70,20 +70,20 @@ class Utils {
      *    [Basic=>null, realm=>'"foo\bar"']
      *    ["</TheBook/chapter,2>" => null, "rel" => "pre,vious", "title*" => "UTF-8'de'letztes%20Kapitel" ], ["</TheBook/chapter4>" => null, "rel" => "next", "title*" => "UTF-8'de'n%c3%a4chstes%20Kapitel" ]
      *
-     * @param mixed $header_values string or array
+     * @param array|string $headerValues
      *
      * @throws \Exception
      *
      * @return array
      */
-    public static function splitHttpHeaderWords($header_values) {
-        if (!is_array($header_values)) {
-            $header_values = array($header_values);
+    public static function splitHttpHeaderWords($headerValues) {
+        if (!\is_array($headerValues)) {
+            $headerValues = [$headerValues];
         }
 
-        $result = array();
-        foreach ($header_values as $header) {
-            $cur = array();
+        $result = [];
+        foreach ($headerValues as $header) {
+            $cur = [];
             while ($header) {
                 $key = '';
                 $val = null;
@@ -102,21 +102,21 @@ class Utils {
                         $header = $match[2];
                         // remove backslash character escape
                         $val = preg_replace('/\\\\(.)/', '$1', $val);
-                        // some unquoted value
+                    // some unquoted value
                     } elseif (preg_match('/^\s*=\s*([^;,\s]*)(.*)/', $header, $match)) {
                         $val = trim($match[1]);
                         $header = $match[2];
                     }
                     // add details
                     $cur[$key] = $val;
-                    // reached the end, a new 'token' or 'attribute' about to start
+                // reached the end, a new 'token' or 'attribute' about to start
                 } elseif (preg_match('/^\s*,(.*)/', $header, $match)) {
                     $header = $match[1];
-                    if (count($cur)) {
+                    if (\count($cur)) {
                         $result[] = $cur;
                     }
-                    $cur = array();
-                    // continue
+                    $cur = [];
+                // continue
                 } elseif (preg_match('/^\s*;(.*)/', $header, $match)) {
                     $header = $match[1];
                 } elseif (preg_match('/^\s+(.*)/', $header, $match)) {
@@ -125,7 +125,7 @@ class Utils {
                     throw new \Exception('This should not happen: "' . $header . '"');
                 }
             }
-            if (count($cur)) {
+            if (\count($cur)) {
                 $result[] = $cur;
             }
         }
@@ -134,7 +134,7 @@ class Utils {
     }
 
     /**
-     * HTTP Headers Util 0.1
+     * HTTP Headers Util 0.1.
      *
      * @author: Keyvan Minoukadeh – hide@address.com – http://www.keyvan.net
      *
@@ -158,29 +158,29 @@ class Utils {
      *
      *    text/plain; charset="iso-8859/1"
      *
-     * @param array $header_values
+     * @param array $headerValues
      *
      * @return string
      *
      * @see http://tools.ietf.org/html/rfc5988#section-5
      */
-    public static function joinHttpHeaderWords(array $header_values) {
-        if (count($header_values) === 0) {
+    public static function joinHttpHeaderWords(array $headerValues) {
+        if (\count($headerValues) === 0) {
             return '';
         }
         // evaluate if its a multidimensional array
-        $first = reset($header_values);
-        if (!is_array($first)) {
-            $header_values = array($header_values);
+        $first = reset($headerValues);
+        if (!\is_array($first)) {
+            $headerValues = [$headerValues];
         }
 
         $spaces = '\\s';
         $ctls = '\\x00-\\x1F\\x7F'; //@see http://stackoverflow.com/a/1497928/413531
         $tspecials = '()<>@,;:<>/[\\]?.="\\\\';
         $tokenPattern = "#^[^{$spaces}{$ctls}{$tspecials}]+$#";
-        $result = array();
-        foreach ($header_values as $header) {
-            $attr = array();
+        $result = [];
+        foreach ($headerValues as $header) {
+            $attr = [];
             foreach ($header as $key => $val) {
                 if (isset($val)) {
                     if (preg_match($tokenPattern, $val)) {
@@ -192,7 +192,7 @@ class Utils {
                 }
                 $attr[] = $key;
             }
-            if (count($attr)) {
+            if (\count($attr)) {
                 $result[] = implode('; ', $attr);
             }
         }

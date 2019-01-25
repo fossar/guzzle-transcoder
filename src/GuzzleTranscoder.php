@@ -3,11 +3,11 @@
 namespace Fossar\GuzzleTranscoder;
 
 use Ddeboer\Transcoder\Transcoder;
-use GuzzleHttp\Event\AbstractTransferEvent;
-use GuzzleHttp\Event\SubscriberInterface;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7;
+use Psr\Http\Message\ResponseInterface;
 
-class GuzzleTranscoder implements SubscriberInterface {
+class GuzzleTranscoder {
     /** @var Transcoder */
     private $transcoder;
 
@@ -20,50 +20,59 @@ class GuzzleTranscoder implements SubscriberInterface {
     /** @var bool */
     private $replaceContent;
 
-    public function __construct($targetEncoding = 'UTF-8', $replaceHeaders = true, $replaceContent = false) {
-        $this->transcoder = Transcoder::create();
-        $this->targetEncoding = $targetEncoding;
-        $this->replaceHeaders = $replaceHeaders;
-        $this->replaceContent = $replaceContent;
-    }
-
     /**
-     * Returns an array of event names this subscriber wants to listen to.
+     * Constructs a class for transcoding Responses.
      *
-     * @return array
+     * @param array $options array supporting the following options
+     *  - string targetEncoding: Encoding the response should be transcoded to (default: 'utf-8')
+     *  - bool   replaceHeaders: Whether charset field in Content-Type header should be updated (default: true)
+     *  - bool   replaceContent: Whether charset declarations in the body (meta tags, XML declaration) should be updated (default: false)
      */
-    public function getEvents() {
-        return array(
-            'complete' => array('convert'),
-            'error' => array('convert')
-        );
+    public function __construct(array $options = []) {
+        $this->transcoder = Transcoder::create();
+        $this->targetEncoding = isset($options['targetEncoding']) ? $options['targetEncoding'] : 'utf-8';
+        $this->replaceHeaders = isset($options['replaceHeaders']) ? $options['replaceHeaders'] : true;
+        $this->replaceContent = isset($options['replaceContent']) ? $options['replaceContent'] : false;
     }
 
-    public function convert(AbstractTransferEvent $event) {
-        $response = $event->getResponse();
-
+    public function convert(ResponseInterface $response) {
         if ($response === null) {
-            return;
+            return $response;
         }
 
         $stream = $response->getBody();
         if ($stream === null) { // no body - nothing to convert
-            return;
+            return $response;
         }
 
         $headers = $response->getHeaders();
-        $content = $stream->__toString();
-        $result = $this->convertResponse($headers, $content);
+        $result = $this->convertResponse($headers, (string) $stream);
         if ($result !== null) {
-            $body = new Stream(fopen('php://temp', 'r+')); // see Guzzle 4.1.7 > GuzzleHttp\Adapter\Curl\RequestMediator::writeResponseBody
-            $response->setBody($body);
-            $body->write($result['content']);
-            $response->setHeaders($result['headers']);
+            $body = Psr7\stream_for($result['content']);
+            $response = $response->withBody($body);
+            foreach ($result['headers'] as $name => $value) {
+                $response = $response->withHeader($name, $value);
+            }
         }
+
+        return $response;
     }
 
     /**
-     * Converts the given $content to the $targetEncoding. The original encoding is defined by (in order):
+     * @param array $options
+     */
+    public static function create_middleware(array $options = []) {
+        $transcoder = new self($options);
+
+        return Middleware::mapResponse(function(ResponseInterface $response) use ($transcoder) {
+            return $transcoder->convert($response);
+        });
+    }
+
+    /**
+     * Converts the given $content to the $targetEncoding.
+     *
+     * The original encoding is defined by (in order):
      * - the 'charset' parameter of the 'content-type' header
      * - the meta information in the body of an HTML (content-type: text/html)or XML (content-type: text/xml or application/xml) document
      *
@@ -77,33 +86,31 @@ class GuzzleTranscoder implements SubscriberInterface {
      * @return EncodingResult|null
      */
     public function convertResponse(array $headers, $content) {
-        $encodings = array(
-            'header' => null,
+        $headerDeclaredEncoding = null;
+        $bodyDeclaredEncoding = null;
+        $replacements = [
+            'headers' => [],
             'content' => null,
-        );
-        $replacements = array(
-            'header' => null,
-            'content' => null,
-        );
+        ];
 
         $contentType = self::getByCaseInsensitiveKey($headers, 'content-type');
         if ($contentType === null) {
             $contentType = '';
-        } elseif (is_array($contentType)) {
+        } elseif (\is_array($contentType)) {
             $contentType = $contentType[0];
         }
 
         $parsed = Utils::splitHttpHeaderWords($contentType);
-        if (count($parsed) > 0) {
+        if (\count($parsed) > 0) {
             $parsed = reset($parsed);
         }
         //check the header
         $encoding = self::getByCaseInsensitiveKey($parsed, 'charset');
         if ($encoding !== null) {
-            $encodings['header'] = $encoding;
+            $headerDeclaredEncoding = $encoding;
         }
         $newParsed = self::setByCaseInsensitiveKey($parsed, 'charset', $this->targetEncoding);
-        $replacements['header']['content-type'] = Utils::joinHttpHeaderWords($newParsed);
+        $replacements['headers']['content-type'] = Utils::joinHttpHeaderWords($newParsed);
         // else, check the body
         if (preg_match('#^text/html#i', $contentType)) {
             // find http-equiv
@@ -113,48 +120,46 @@ class GuzzleTranscoder implements SubscriberInterface {
                 $pattern = "#(?P<before>.*)content=(?P<quote>[\"'])(?P<content>.*?)\\2(?P<after>.*)#";
                 if (preg_match($pattern, $match[0], $innerMatch)) {
                     $parsed = Utils::splitHttpHeaderWords($innerMatch['content']);
-                    if (count($parsed) > 0) {
+                    if (\count($parsed) > 0) {
                         $parsed = reset($parsed);
                     }
-                    $encodings['content'] = self::getByCaseInsensitiveKey($parsed, 'charset');
+                    $bodyDeclaredEncoding = self::getByCaseInsensitiveKey($parsed, 'charset');
                     $newParsed = self::setByCaseInsensitiveKey($parsed, 'charset', $this->targetEncoding);
                     $newContent = Utils::joinHttpHeaderWords($newParsed);
                     $newMeta = $innerMatch['before'] . "content={$innerMatch['quote']}" . $newContent . "{$innerMatch['quote']}" . $innerMatch['after'];
                     $replacements['content'][$match[0]] = $newMeta;
                 }
             } elseif (preg_match($patternHtml5, $content, $match)) {
-                $encodings['content'] = $match['charset'];
+                $bodyDeclaredEncoding = $match['charset'];
                 $newMeta = $match['before'] . "charset={$match['quote']}" . $this->targetEncoding . "{$match['quote']}" . $match['after'];
                 $replacements['content'][$match[0]] = $newMeta;
             }
         } elseif (preg_match('#^(text|application)/xml#i', $contentType)) { // see http://stackoverflow.com/a/3272572/413531
             $patternXml = "#(?P<before><\\?xml[^>]+?)encoding=(?P<quote>[\"'])(?P<charset>[^\"']+?)\\2(?P<after>[^>]*?>)#i";
             if (preg_match($patternXml, $content, $match)) {
-                $encodings['content'] = $match['charset'];
+                $bodyDeclaredEncoding = $match['charset'];
                 $newMeta = $match['before'] . "encoding={$match['quote']}" . $this->targetEncoding . "{$match['quote']}" . $match['after'];
                 $replacements['content'][$match[0]] = $newMeta;
             }
         }
 
         $finalEncoding = null;
-        foreach ($encodings as $type => $encoding) {
-            if ($encoding !== null) {
-                $finalEncoding = $encoding;
-                break;
-            }
-        }
-        if ($finalEncoding === null) {
+        if ($bodyDeclaredEncoding !== null) {
+            $finalEncoding = $bodyDeclaredEncoding;
+        } elseif ($headerDeclaredEncoding !== null) {
+            $finalEncoding = $headerDeclaredEncoding;
+        } else {
             return null;
         }
 
-        $converted = $this->transcoder->transcode($content, $finalEncoding, $this->targetEncoding);
         $headers_new = $headers;
         if ($this->replaceHeaders) {
-            foreach ($replacements['header'] as $headerKey => $value) {
+            foreach ($replacements['headers'] as $headerKey => $value) {
                 $headers_new = self::setByCaseInsensitiveKey($headers_new, $headerKey, $value);
             }
         }
 
+        $converted = $this->transcoder->transcode($content, $finalEncoding, $this->targetEncoding);
         $converted_new = $converted;
         if ($this->replaceContent) {
             if ($replacements['content'] !== null) {
@@ -164,17 +169,19 @@ class GuzzleTranscoder implements SubscriberInterface {
             }
         }
 
-        return array(
+        return [
             'headers' => $headers_new,
-            'content' => $converted_new
-        );
+            'content' => $converted_new,
+        ];
     }
 
     /**
+     * Gets array item by case-insensitive key.
+     *
      * @param array $words
      * @param $key
      *
-     * @return mixed|null
+     * @return ?mixed
      */
     private static function getByCaseInsensitiveKey(array $words, $key) {
         foreach ($words as $headerWord => $value) {
@@ -187,8 +194,10 @@ class GuzzleTranscoder implements SubscriberInterface {
     }
 
     /**
+     * Sets array item by case-insensitive key.
+     *
      * @param array $words
-     * @param $key
+     * @param string $key
      * @param $newValue
      *
      * @return array
@@ -196,11 +205,12 @@ class GuzzleTranscoder implements SubscriberInterface {
     private static function setByCaseInsensitiveKey(array $words, $key, $newValue) {
         foreach ($words as $headerWord => $value) {
             if (strcasecmp($headerWord, $key) === 0) {
-                $words[$headerWord] = $newValue;
+                $key = $headerWord;
 
-                return $words;
+                break;
             }
         }
+
         $words[$key] = $newValue;
 
         return $words;
