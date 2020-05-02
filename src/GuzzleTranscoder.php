@@ -3,12 +3,13 @@
 namespace Fossar\GuzzleTranscoder;
 
 use Ddeboer\Transcoder\Transcoder;
+use Ddeboer\Transcoder\TranscoderInterface;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class GuzzleTranscoder {
-    /** @var ?Transcoder */
+    /** @var ?TranscoderInterface */
     private $transcoder;
 
     /** @var string */
@@ -38,7 +39,7 @@ class GuzzleTranscoder {
     /**
      * Returns a transcoder instance.
      *
-     * @return Transcoder
+     * @return TranscoderInterface
      */
     private function createTranscoder() {
         if ($this->transcoder === null) {
@@ -48,15 +49,13 @@ class GuzzleTranscoder {
         return $this->transcoder;
     }
 
+    /**
+     * Converts a PSR response.
+     *
+     * @return ResponseInterface
+     */
     public function convert(ResponseInterface $response) {
-        if ($response === null) {
-            return $response;
-        }
-
         $stream = $response->getBody();
-        if ($stream === null) { // no body - nothing to convert
-            return $response;
-        }
 
         $headers = $response->getHeaders();
         $result = $this->convertResponse($headers, (string) $stream);
@@ -76,7 +75,7 @@ class GuzzleTranscoder {
      *
      * @param callable $handler
      *
-     * @return Closure
+     * @return callable
      */
     public function __invoke(callable $handler) {
         return function(RequestInterface $request, array $options) use ($handler) {
