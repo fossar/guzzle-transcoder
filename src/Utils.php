@@ -70,11 +70,11 @@ class Utils {
      *    [Basic=>null, realm=>'"foo\bar"']
      *    ["</TheBook/chapter,2>" => null, "rel" => "pre,vious", "title*" => "UTF-8'de'letztes%20Kapitel" ], ["</TheBook/chapter4>" => null, "rel" => "next", "title*" => "UTF-8'de'n%c3%a4chstes%20Kapitel" ]
      *
-     * @param array|string $headerValues
+     * @param string[]|string $headerValues
      *
      * @throws \Exception
      *
-     * @return array
+     * @return list<non-empty-array<string, ?string>>
      */
     public static function splitHttpHeaderWords($headerValues) {
         if (!\is_array($headerValues)) {
@@ -198,5 +198,50 @@ class Utils {
         }
 
         return implode(', ', $result);
+    }
+
+    /**
+     * Gets array item by case-insensitive key.
+     *
+     * @template T
+     *
+     * @param array<string, T> $words
+     * @param string $key
+     *
+     * @return ?T
+     */
+    public static function getByCaseInsensitiveKey(array $words, $key) {
+        foreach ($words as $headerWord => $value) {
+            if (strcasecmp($headerWord, $key) === 0) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets array item by case-insensitive key.
+     *
+     * @template T
+     *
+     * @param array<string, T> $words
+     * @param string $key
+     * @param T $newValue
+     *
+     * @return array<string, T>
+     */
+    public static function setByCaseInsensitiveKey(array $words, $key, $newValue) {
+        foreach ($words as $headerWord => $value) {
+            if (strcasecmp($headerWord, $key) === 0) {
+                $key = $headerWord;
+
+                break;
+            }
+        }
+
+        $words[$key] = $newValue;
+
+        return $words;
     }
 }
