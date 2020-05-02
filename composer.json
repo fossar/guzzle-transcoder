@@ -25,5 +25,11 @@
             "email": "jtojnar@gmail.com"
         }
     ],
+    "scripts": {
+        "cs": "php-cs-fixer fix --dry-run",
+        "fix": "php-cs-fixer fix",
+        "lint": "parallel-lint src",
+        "test": "simple-phpunit"
+    },
     "minimum-stability": "stable"
 }

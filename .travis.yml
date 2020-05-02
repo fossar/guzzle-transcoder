@@ -25,6 +25,6 @@ before_script:
     - composer install --prefer-dist --no-interaction
 
 script:
-    - vendor/bin/parallel-lint src
-    - vendor/bin/simple-phpunit
-    - if [ "$CS_FIXER" = true ]; then vendor/bin/php-cs-fixer; fi
+    - composer run-script lint
+    - composer test
+    - if [ "$CS_FIXER" = true ]; then composer run-script cs; fi
