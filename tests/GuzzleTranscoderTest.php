@@ -13,6 +13,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
         'html4' => 'text/html',
         'html5' => 'text/html',
         'text-xml' => 'text/xml',
+        'application-rss-xml' => 'application/rss+xml',
         'application-xml' => 'application/xml',
     ];
 
@@ -59,6 +60,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
                 break;
 
             case 'text-xml':
+            case 'application-rss-xml':
             case 'application-xml':
                 $meta = '';
                 if ($encodingInMeta !== null) {
@@ -171,8 +173,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
 
     public function testConvertResponse() {
         $enc = strtolower(mb_internal_encoding());
-
-        $tests = ['html4', 'html5', 'text-xml', 'application-xml'];
+        $tests = ['html4', 'html5', 'text-xml', 'application-xml', 'application-rss-xml'];
         $converters = [
             'header' => new GuzzleTranscoder([
                 'targetEncoding' => $enc,

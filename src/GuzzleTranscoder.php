@@ -122,7 +122,7 @@ class GuzzleTranscoder {
         // else, check the body
         if (preg_match('#^text/html#i', $contentType)) {
             list($bodyDeclaredEncoding, $contentReplacements) = ContentTypeExtractor::getContentTypeFromHtml($content, $this->targetEncoding);
-        } elseif (preg_match('#^(text|application)/xml#i', $contentType)) { // see http://stackoverflow.com/a/3272572/413531
+        } elseif (preg_match('#^(text|application)/(.+\+)?xml#i', $contentType)) { // see http://stackoverflow.com/a/3272572/413531
             list($bodyDeclaredEncoding, $contentReplacements) = ContentTypeExtractor::getContentTypeFromXml($content, $this->targetEncoding);
         }
 
