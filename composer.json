@@ -31,5 +31,10 @@
         "lint": "parallel-lint src",
         "test": "simple-phpunit"
     },
+    "config": {
+        "platform": {
+            "php": "5.6.0"
+        }
+    },
     "minimum-stability": "stable"
 }
