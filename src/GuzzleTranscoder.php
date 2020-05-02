@@ -74,8 +74,6 @@ class GuzzleTranscoder {
     /**
      * Called when the middleware is handled by the client.
      *
-     * @param callable $handler
-     *
      * @return callable
      */
     public function __invoke(callable $handler) {
@@ -116,7 +114,7 @@ class GuzzleTranscoder {
         if ($type !== null) {
             list($contentType, $headerDeclaredEncoding, $params) = $type;
 
-            $headerReplacements['content-type'] = $contentType . (count($params) > 0 ? '; ' . Utils::joinHttpHeaderWords($params) : '');
+            $headerReplacements['content-type'] = $contentType . (\count($params) > 0 ? '; ' . Utils::joinHttpHeaderWords($params) : '');
         } else {
             return null;
         }

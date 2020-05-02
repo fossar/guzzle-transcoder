@@ -125,7 +125,6 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
     /**
      * @dataProvider convertData
      *
-     * @param Response $input
      * @param Response[] $expected
      */
     public function testConvert(Response $input, array $expected) {

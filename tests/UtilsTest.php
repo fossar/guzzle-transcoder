@@ -55,7 +55,7 @@ class UtilsTest extends \PHPUnit\Framework\TestCase {
                     $base = $data['base'];
                 } else { // swap data for join
                     $expected = $data['base'];
-                    if (array_key_exists('join', $data)) {
+                    if (\array_key_exists('join', $data)) {
                         $expected = $data['join'];
                     }
                     $base = $data['expected'];
