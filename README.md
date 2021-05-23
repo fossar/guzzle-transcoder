@@ -27,6 +27,6 @@ echo $req->getBody();
 
 [Composer]: https://getcomposer.org/
 [Guzzle]: https://github.com/guzzle/guzzle
-[Transcoder]: https://github.com/ddeboer/transcoder
+[Transcoder]: https://github.com/fossar/transcoder
 [guzzle-auto-charset-encoding-subscriber]: https://github.com/paslandau/guzzle-auto-charset-encoding-subscriber
 [web-utility]: https://github.com/paslandau/web-utility

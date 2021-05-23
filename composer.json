@@ -4,7 +4,7 @@
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^6.3",
-        "ddeboer/transcoder": "^1.0",
+        "fossar/transcoder": "^1.0",
         "guzzlehttp/psr7": "^1.5"
     },
     "require-dev" : {
