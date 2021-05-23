@@ -3,7 +3,7 @@
 namespace Fossar\GuzzleTranscoder\Tests;
 
 class UtilsTest extends \PHPUnit\Framework\TestCase {
-    public function test_splitHeaderWords_joinHeaderWords() {
+    public function testSplitHeaderWordsJoinHeaderWords() {
         $tests = [
             'key' => [
                 'base' => 'foo',

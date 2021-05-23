@@ -15,7 +15,7 @@ class ReadmeTest extends \PHPUnit\Framework\TestCase {
 
         $contents = str_replace('HandlerStack::create();', 'HandlerStack::create($mock);', $contents);
 
-        preg_match_all('(```php\n(.*?)\n```)s', $contents, $matches, PREG_SET_ORDER);
+        preg_match_all('(```php\n(.*?)\n```)s', $contents, $matches, \PREG_SET_ORDER);
 
         $codes = array_map(function($match) {
             return $match[1];
