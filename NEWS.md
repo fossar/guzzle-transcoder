@@ -1,5 +1,8 @@
 # guzzle-transcoder changes
 
+## 0.2.1 – 2021-05-23
+- Switch to [our fork](https://github.com/fossar/transcoder) of Transcoder
+
 ## 0.2.0 – 2020-05-02
 - Split the extraction out of GuzzleTranscoder class
 - Handle application/rss+xml and other such XML types
