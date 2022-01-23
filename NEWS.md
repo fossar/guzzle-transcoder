@@ -1,5 +1,8 @@
 # guzzle-transcoder changes
 
+## 0.2.2 – unreleased
+- Add support for Guzzle 7
+
 ## 0.2.1 – 2021-05-23
 - Switch to [our fork](https://github.com/fossar/transcoder) of Transcoder
 

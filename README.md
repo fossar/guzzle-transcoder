@@ -1,6 +1,6 @@
 # guzzle-transcoder
 
-This [Guzzle] 6 middleware converts documents obtained by Guzzle to UTF-8 using [Transcoder] library. It is largely based on Pascal Landau’s [guzzle-auto-charset-encoding-subscriber] and [web-utility] libraries. Thanks to Transcoder, when mbstring is not available, iconv will be used.
+This [Guzzle] 6/7 middleware converts documents obtained by Guzzle to UTF-8 using [Transcoder] library. It is largely based on Pascal Landau’s [guzzle-auto-charset-encoding-subscriber] and [web-utility] libraries. Thanks to Transcoder, when mbstring is not available, iconv will be used.
 
 ## Installation
 It is recommended to install the library using [Composer]:
