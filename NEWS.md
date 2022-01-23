@@ -1,5 +1,8 @@
 # guzzle-transcoder changes
 
+## 0.2.3 – 2022-01-23
+- Added support for guzzlehttp/psr7 2.0
+
 ## 0.2.2 – 2022-01-23
 - Add support for Guzzle 7
 

@@ -4,7 +4,7 @@ namespace Fossar\GuzzleTranscoder;
 
 use Ddeboer\Transcoder\Transcoder;
 use Ddeboer\Transcoder\TranscoderInterface;
-use GuzzleHttp\Psr7;
+use GuzzleHttp\Psr7\Utils as Psr7Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -61,7 +61,7 @@ class GuzzleTranscoder {
         $headers = $response->getHeaders();
         $result = $this->convertResponse($headers, (string) $stream);
         if ($result !== null) {
-            $body = Psr7\stream_for($result['content']);
+            $body = Psr7Utils::streamFor($result['content']);
             $response = $response->withBody($body);
             foreach ($result['headers'] as $name => $value) {
                 $response = $response->withHeader($name, $value);
