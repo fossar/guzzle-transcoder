@@ -8,11 +8,11 @@ class ContentTypeExtractor {
     /**
      * Regex pattern for HTML 4 meta tag – e.g. <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">.
      */
-    private const PATTERN_HTML4 = "#<meta[^>]+http-equiv=[\"']?content-type[\"']?[^>]*?>#i";
+    private const PATTERN_HTML4 = '/<meta[^>]+http-equiv\s*=\s*(?P<quote>["\']?)content-type\g{quote}[^>]*?>/i';
     /**
      * Regex pattern for HTML 5 meta tag – e.g. <meta charset=iso-8859-1>.
      */
-    private const PATTERN_HTML5 = "#(?P<before><meta[^>]+?)charset=(?P<quote>[\"'])(?P<charset>[^\"' ]+?)\\2(?P<after>[^>]*?>)#i";
+    private const PATTERN_HTML5 = '/(?P<before><meta[^>]+?)charset\s*=\s*(?:(?P<quote>["\'])(?P<charset1>[^"\' ]+?)\g{quote}|(?P<charset2>[^"\'=<>`\s]+))(?P<after>[^>]*?>)/iJ';
 
     /**
      * Converts the given $content to the $targetEncoding.
@@ -69,7 +69,7 @@ class ContentTypeExtractor {
 
         // find http-equiv
         if (preg_match(self::PATTERN_HTML4, $content, $match)) {
-            $pattern = "#(?P<before>.*)content=(?P<quote>[\"'])(?P<content>.*?)\\2(?P<after>.*)#";
+            $pattern = '/(?P<before>.*)content\s*=\s*(?P<quote>["\'])(?P<content>.*?)\g{quote}(?P<after>.*)/i';
             if (preg_match($pattern, $match[0], $innerMatch)) {
                 $parsed = Utils::splitHttpHeaderWords($innerMatch['content']);
                 if (\count($parsed) > 0) {
@@ -82,7 +82,7 @@ class ContentTypeExtractor {
                 $replacements[$match[0]] = $newMeta;
             }
         } elseif (preg_match(self::PATTERN_HTML5, $content, $match)) {
-            $bodyDeclaredEncoding = $match['charset'];
+            $bodyDeclaredEncoding = $match['charset1'] . $match['charset2'];
             $newMeta = $match['before'] . "charset={$match['quote']}" . $targetEncoding . "{$match['quote']}" . $match['after'];
             $replacements[$match[0]] = $newMeta;
         }
