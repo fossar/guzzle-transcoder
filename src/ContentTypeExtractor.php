@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fossar\GuzzleTranscoder;
 
 class ContentTypeExtractor {
@@ -24,11 +26,10 @@ class ContentTypeExtractor {
      * Otherwise an object of type EncodingResult is returned. Please see the description of the properties of said class.
      *
      * @param array<string, list<string>|string> $headers
-     * @param string $targetEncoding
      *
      * @return ?array{string, ?string, array<string, ?string>} A triplet of MIME type, optional value of charset parameter and parameters from the header
      */
-    public static function getContentTypeFromHeader(array $headers, $targetEncoding) {
+    public static function getContentTypeFromHeader(array $headers, string $targetEncoding): ?array {
         $contentType = Utils::getByCaseInsensitiveKey($headers, 'content-type');
         if ($contentType === null) {
             return null;
@@ -60,12 +61,9 @@ class ContentTypeExtractor {
     /**
      * Obtains MIME type from a text of HTML document.
      *
-     * @param string $content
-     * @param string $targetEncoding
-     *
      * @return array{?string, array<string, string>} A pair of MIME type and replacements for the content
      */
-    public static function getContentTypeFromHtml($content, $targetEncoding) {
+    public static function getContentTypeFromHtml(string $content, string $targetEncoding): array {
         $bodyDeclaredEncoding = null;
         $replacements = [];
 
@@ -95,12 +93,9 @@ class ContentTypeExtractor {
     /**
      * Obtains MIME type from a text of XML document.
      *
-     * @param string $content
-     * @param string $targetEncoding
-     *
      * @return array{?string, array<string, string>} A pair of MIME type and replacements for the content
      */
-    public static function getContentTypeFromXml($content, $targetEncoding) {
+    public static function getContentTypeFromXml(string $content, string $targetEncoding): array {
         $bodyDeclaredEncoding = null;
         $replacements = [];
 

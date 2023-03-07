@@ -8,7 +8,9 @@ $rules = [
     '@Symfony:risky' => true,
     '@PHP71Migration' => true,
     '@PHP71Migration:risky' => true,
-    'declare_strict_types' => false,
+    // 'phpdoc_to_param_type' => true,
+    'phpdoc_to_return_type' => true,
+    'phpdoc_types_order' => false,
 
     // overwrite some Symfony rules
     'braces' => ['position_after_functions_and_oop_constructs' => 'same'],
@@ -18,7 +20,7 @@ $rules = [
     'yoda_style' => false,
 
     // additional rules
-    'phpdoc_add_missing_param_annotation' => ['only_untyped' => false],
+    'phpdoc_add_missing_param_annotation' => true,
     'phpdoc_order' => true,
     'strict_param' => true,
 ];

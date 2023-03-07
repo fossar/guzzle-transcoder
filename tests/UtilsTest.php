@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fossar\GuzzleTranscoder\Tests;
 
 class UtilsTest extends \PHPUnit\Framework\TestCase {

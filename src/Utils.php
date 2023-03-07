@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fossar\GuzzleTranscoder;
 
 class Utils {
@@ -74,9 +76,9 @@ class Utils {
      *
      * @throws \Exception
      *
-     * @return list<non-empty-array<string, ?string>>
+     * @return array<non-empty-array<string, ?string>>
      */
-    public static function splitHttpHeaderWords($headerValues) {
+    public static function splitHttpHeaderWords($headerValues): array {
         if (!\is_array($headerValues)) {
             $headerValues = [$headerValues];
         }
@@ -157,12 +159,9 @@ class Utils {
      * will both return the string:
      *
      *    text/plain; charset="iso-8859/1"
-     *
-     * @return string
-     *
      * @see http://tools.ietf.org/html/rfc5988#section-5
      */
-    public static function joinHttpHeaderWords(array $headerValues) {
+    public static function joinHttpHeaderWords(array $headerValues): string {
         if (\count($headerValues) === 0) {
             return '';
         }
@@ -204,11 +203,10 @@ class Utils {
      * @template T
      *
      * @param array<string, T> $words
-     * @param string $key
      *
      * @return ?T
      */
-    public static function getByCaseInsensitiveKey(array $words, $key) {
+    public static function getByCaseInsensitiveKey(array $words, string $key) {
         foreach ($words as $headerWord => $value) {
             if (strcasecmp($headerWord, $key) === 0) {
                 return $value;
@@ -224,12 +222,11 @@ class Utils {
      * @template T
      *
      * @param array<string, T> $words
-     * @param string $key
      * @param T $newValue
      *
      * @return array<string, T>
      */
-    public static function setByCaseInsensitiveKey(array $words, $key, $newValue) {
+    public static function setByCaseInsensitiveKey(array $words, string $key, $newValue): array {
         foreach ($words as $headerWord => $value) {
             if (strcasecmp($headerWord, $key) === 0) {
                 $key = $headerWord;

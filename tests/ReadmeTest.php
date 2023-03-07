@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fossar\GuzzleTranscoder\Tests;
 
 use GuzzleHttp\Handler\MockHandler;

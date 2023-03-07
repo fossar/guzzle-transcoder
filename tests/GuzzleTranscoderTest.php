@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fossar\GuzzleTranscoder\Tests;
 
 use Fossar\GuzzleTranscoder\GuzzleTranscoder;
@@ -19,15 +21,8 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * Creates a Response object.
-     *
-     * @param ?string $bodyEncoding
-     * @param ?string $encodingInHeader
-     * @param ?string $encodingInMeta
-     * @param string $type
-     *
-     * @return Response
      */
-    public function getResponse($bodyEncoding, $encodingInHeader, $encodingInMeta, $type) {
+    public function getResponse(?string $bodyEncoding, ?string $encodingInHeader, ?string $encodingInMeta, string $type): Response {
         mb_internal_encoding('utf-8');
 
         $status = 200;
@@ -77,7 +72,10 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
         return new Response($status, $headers, $content);
     }
 
-    public function convertData() {
+    /**
+     * @return array<string, array{input: Response, expected: array<string, Response>}>
+     */
+    public function convertData(): array {
         $enc = mb_internal_encoding();
         $inputEnc = 'iso-8859-1';
 
@@ -229,11 +227,9 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
      * Gets the headers from a HTTP response as one dimensional associative array
      * with header names as keys. The header values will not be parsed but saved as-is!
      *
-     * @param $responseString
-     *
-     * @return array
+     * @return array{headers: array<string>, body: string}
      */
-    private function splitHeadersAndContentFromHttpResponseString($responseString) {
+    private function splitHeadersAndContentFromHttpResponseString(string $responseString): array {
         $lines = explode("\n", $responseString);
         $headers = [];
         $i = 0;

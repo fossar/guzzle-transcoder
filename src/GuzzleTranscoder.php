@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Fossar\GuzzleTranscoder;
 
 use Ddeboer\Transcoder\Transcoder;
 use Ddeboer\Transcoder\TranscoderInterface;
+use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Utils as Psr7Utils;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -38,10 +41,8 @@ class GuzzleTranscoder {
 
     /**
      * Returns a transcoder instance.
-     *
-     * @return TranscoderInterface
      */
-    private function createTranscoder() {
+    private function createTranscoder(): TranscoderInterface {
         if ($this->transcoder === null) {
             $this->transcoder = Transcoder::create();
         }
@@ -51,13 +52,11 @@ class GuzzleTranscoder {
 
     /**
      * Converts a PSR response.
-     *
-     * @return ResponseInterface
      */
-    public function convert(ResponseInterface $response) {
+    public function convert(ResponseInterface $response): ResponseInterface {
         $stream = $response->getBody();
 
-        /** @var array<string, list<string>|string> */
+        /** @var array<string, array<string>|string> */
         $headers = $response->getHeaders();
         $result = $this->convertResponse($headers, (string) $stream);
         if ($result !== null) {
@@ -74,13 +73,15 @@ class GuzzleTranscoder {
     /**
      * Called when the middleware is handled by the client.
      *
-     * @return callable
+     * @param callable(RequestInterface, array<string, mixed>): PromiseInterface<ResponseInterface> $handler
+     *
+     * @return callable(RequestInterface, array<string, mixed>): PromiseInterface<ResponseInterface>
      */
-    public function __invoke(callable $handler) {
-        return function(RequestInterface $request, array $options) use ($handler) {
+    public function __invoke(callable $handler): callable {
+        return function(RequestInterface $request, array $options) use ($handler): PromiseInterface {
             $promise = $handler($request, $options);
 
-            return $promise->then(function(ResponseInterface $response) {
+            return $promise->then(function(ResponseInterface $response): ResponseInterface {
                 return $this->convert($response);
             });
         };
@@ -97,15 +98,14 @@ class GuzzleTranscoder {
      *
      * Otherwise an array containing the new headers and content is returned.
      *
-     * @param array<string, list<string>|string> $headers
-     * @param string $content
+     * @param array<string, array<string>|string> $headers
      *
-     * @return ?array{headers: array<string, list<string>|string>, content: string}
+     * @return ?array{headers: array<string, array<string>|string>, content: string}
      */
-    public function convertResponse(array $headers, $content) {
+    public function convertResponse(array $headers, string $content): ?array {
         $headerDeclaredEncoding = null;
         $bodyDeclaredEncoding = null;
-        /** @var array<string, list<string>|string> */
+        /** @var array<string, array<string>|string> */
         $headerReplacements = [];
         $contentReplacements = [];
 
