@@ -1,5 +1,8 @@
 # guzzle-transcoder changes
 
+## unreleased
+- Raise minimum PHP version to 7.2.5.
+
 ## 0.2.3 – 2022-01-23
 - Added support for guzzlehttp/psr7 2.0
 

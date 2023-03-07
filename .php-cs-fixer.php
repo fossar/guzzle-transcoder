@@ -6,8 +6,9 @@ $finder = PhpCsFixer\Finder::create()
 $rules = [
     '@Symfony' => true,
     '@Symfony:risky' => true,
-    '@PHP56Migration' => true,
-    '@PHP56Migration:risky' => true,
+    '@PHP71Migration' => true,
+    '@PHP71Migration:risky' => true,
+    'declare_strict_types' => false,
 
     // overwrite some Symfony rules
     'braces' => ['position_after_functions_and_oop_constructs' => 'same'],
@@ -17,9 +18,6 @@ $rules = [
     'yoda_style' => false,
 
     // additional rules
-    'array_syntax' => ['syntax' => 'short'],
-    'modernize_types_casting' => true,
-    'ordered_imports' => true,
     'phpdoc_add_missing_param_annotation' => ['only_untyped' => false],
     'phpdoc_order' => true,
     'strict_param' => true,

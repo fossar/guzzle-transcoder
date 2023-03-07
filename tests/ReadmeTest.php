@@ -6,7 +6,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
 class ReadmeTest extends \PHPUnit\Framework\TestCase {
-    public function testReadme() {
+    public function testReadme(): void {
         $contents = file_get_contents(__DIR__ . '/../README.md');
 
         $mock = new MockHandler([

@@ -129,7 +129,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
      *
      * @param Response[] $expected
      */
-    public function testConvert(Response $input, array $expected) {
+    public function testConvert(Response $input, array $expected): void {
         $enc = mb_internal_encoding();
 
         $converters = [
@@ -171,7 +171,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function testConvertResponse() {
+    public function testConvertResponse(): void {
         $enc = strtolower(mb_internal_encoding());
         $tests = ['html4', 'html5', 'text-xml', 'application-xml', 'application-rss-xml'];
         $converters = [

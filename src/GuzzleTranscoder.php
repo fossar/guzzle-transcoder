@@ -31,9 +31,9 @@ class GuzzleTranscoder {
      */
     public function __construct(array $options = []) {
         $this->transcoder = null;
-        $this->targetEncoding = isset($options['targetEncoding']) ? $options['targetEncoding'] : 'utf-8';
-        $this->replaceHeaders = isset($options['replaceHeaders']) ? $options['replaceHeaders'] : true;
-        $this->replaceContent = isset($options['replaceContent']) ? $options['replaceContent'] : false;
+        $this->targetEncoding = $options['targetEncoding'] ?? 'utf-8';
+        $this->replaceHeaders = $options['replaceHeaders'] ?? true;
+        $this->replaceContent = $options['replaceContent'] ?? false;
     }
 
     /**
@@ -112,7 +112,7 @@ class GuzzleTranscoder {
         // check the header
         $type = ContentTypeExtractor::getContentTypeFromHeader($headers, $this->targetEncoding);
         if ($type !== null) {
-            list($contentType, $headerDeclaredEncoding, $params) = $type;
+            [$contentType, $headerDeclaredEncoding, $params] = $type;
 
             $headerReplacements['content-type'] = $contentType . (\count($params) > 0 ? '; ' . Utils::joinHttpHeaderWords($params) : '');
         } else {
@@ -121,9 +121,9 @@ class GuzzleTranscoder {
 
         // else, check the body
         if (preg_match('#^text/html#i', $contentType)) {
-            list($bodyDeclaredEncoding, $contentReplacements) = ContentTypeExtractor::getContentTypeFromHtml($content, $this->targetEncoding);
+            [$bodyDeclaredEncoding, $contentReplacements] = ContentTypeExtractor::getContentTypeFromHtml($content, $this->targetEncoding);
         } elseif (preg_match('#^(text|application)/(.+\+)?xml#i', $contentType)) { // see http://stackoverflow.com/a/3272572/413531
-            list($bodyDeclaredEncoding, $contentReplacements) = ContentTypeExtractor::getContentTypeFromXml($content, $this->targetEncoding);
+            [$bodyDeclaredEncoding, $contentReplacements] = ContentTypeExtractor::getContentTypeFromXml($content, $this->targetEncoding);
         }
 
         $finalEncoding = null;

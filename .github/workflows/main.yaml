@@ -20,11 +20,8 @@ jobs:
           - '7.4'
           - '7.3'
           - '7.2'
-          - '7.1'
-          - '7.0'
-          - '5.6'
         include:
-          - php: '7.0'
+          - php: '7.4'
             cs_fixer: true
     name: 'Check with PHP ${{ matrix.php }}'
     steps:

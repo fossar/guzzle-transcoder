@@ -6,11 +6,11 @@ class ContentTypeExtractor {
     /**
      * Regex pattern for HTML 4 meta tag – e.g. <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">.
      */
-    const PATTERN_HTML4 = "#<meta[^>]+http-equiv=[\"']?content-type[\"']?[^>]*?>#i";
+    private const PATTERN_HTML4 = "#<meta[^>]+http-equiv=[\"']?content-type[\"']?[^>]*?>#i";
     /**
      * Regex pattern for HTML 5 meta tag – e.g. <meta charset=iso-8859-1>.
      */
-    const PATTERN_HTML5 = "#(?P<before><meta[^>]+?)charset=(?P<quote>[\"'])(?P<charset>[^\"' ]+?)\\2(?P<after>[^>]*?>)#i";
+    private const PATTERN_HTML5 = "#(?P<before><meta[^>]+?)charset=(?P<quote>[\"'])(?P<charset>[^\"' ]+?)\\2(?P<after>[^>]*?>)#i";
 
     /**
      * Converts the given $content to the $targetEncoding.
@@ -43,7 +43,7 @@ class ContentTypeExtractor {
 
         // content := "Content-Type" ":" type "/" subtype *(";" parameter)
         // see https://tools.ietf.org/html/rfc2045#section-5.1
-        list($type, $params) = explode(';', $contentType . ';', 2);
+        [$type, $params] = explode(';', $contentType . ';', 2);
 
         $parsed = Utils::splitHttpHeaderWords($params);
         if (\count($parsed) > 0) {
