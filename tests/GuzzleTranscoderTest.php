@@ -9,9 +9,10 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
-    private $types = [
+    private const TYPES = [
         'html4' => 'text/html',
         'html5' => 'text/html',
         'text-xml' => 'text/xml',
@@ -32,7 +33,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
             'Server' => 'Apache',
             'Content-Language' => 'en',
             'Vary' => 'Accept-Encoding',
-            'Content-Type' => $this->types[$type],
+            'Content-Type' => self::TYPES[$type],
         ];
         if ($encodingInHeader !== null) {
             $headers['Content-Type'] .= "; charset={$encodingInHeader}";
@@ -41,7 +42,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
             case 'html4':
                 $meta = '';
                 if ($encodingInMeta !== null) {
-                    $meta = "<meta http-equiv='content-type' content='{$this->types[$type]}; charset={$encodingInMeta}'>";
+                    $meta = "<meta http-equiv='content-type' content='{self::TYPES[$type]}; charset={$encodingInMeta}'>";
                 }
                 $content = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"><html><head>{$meta}<title>Umlauts everywhere öäüßÖÄÜ</title></head><body>$content</body></html>";
                 break;
@@ -80,7 +81,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
         $inputEnc = 'iso-8859-1';
 
         $tests = [];
-        foreach ($this->types as $type => $mime) {
+        foreach (self::TYPES as $type => $mime) {
             $tests["Request-Type: $type; Settings: Charset info neither in header nor in body"] = [
                 'input' => $this->getResponse($inputEnc, null, null, $type),
                 'expected' => [
@@ -192,11 +193,13 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
         foreach ($tests as $type) {
             $input = __DIR__ . "/resources/iso-8859-1-{$type}";
             $c = file_get_contents($input);
+            \assert($c !== false); // For PHPStan.
             ['headers' => $headers, 'body' => $body] = $this->splitHeadersAndContentFromHttpResponseString($c);
 
             foreach ($converters as $converterName => $converter) {
                 $expected = __DIR__ . "/resources/utf8-{$type}-{$converterName}";
                 $c = file_get_contents($expected);
+                \assert($c !== false); // For PHPStan.
                 ['headers' => $expectedHeaders, 'body' => $expectedBody] = $this->splitHeadersAndContentFromHttpResponseString($c);
                 $res = $converter->convertResponse($headers, $body);
 

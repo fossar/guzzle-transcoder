@@ -1,0 +1,24 @@
+<?php
+
+namespace GuzzleHttp\Promise;
+
+/**
+ * @template ValueType
+ * @template ReasonType
+ */
+interface PromiseInterface
+{
+    /**
+     * @template NewValueType
+     * @template NewReasonType
+     *
+     * @param ?callable(ValueType): (NewValueType|PromiseInterface<NewValueType, NewReasonType>) $onFulfilled
+     * @param ?callable(ReasonType): (NewValueType|PromiseInterface<NewValueType, NewReasonType>) $onRejected
+     *
+     * @return PromiseInterface<($onFulfilled is null ? ValueType : NewValueType), ($onRejected is null ? ReasonType : NewReasonType)>
+     */
+    public function then(
+        callable $onFulfilled = null,
+        callable $onRejected = null
+    );
+}

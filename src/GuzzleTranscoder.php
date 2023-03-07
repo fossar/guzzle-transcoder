@@ -27,7 +27,7 @@ class GuzzleTranscoder {
     /**
      * Constructs a class for transcoding Responses.
      *
-     * @param array $options array supporting the following options
+     * @param array{targetEncoding?: string, replaceHeaders?: bool, replaceContent?: bool} $options array supporting the following options
      *  - string targetEncoding: Encoding the response should be transcoded to (default: 'utf-8')
      *  - bool   replaceHeaders: Whether charset field in Content-Type header should be updated (default: true)
      *  - bool   replaceContent: Whether charset declarations in the body (meta tags, XML declaration) should be updated (default: false)
@@ -73,9 +73,11 @@ class GuzzleTranscoder {
     /**
      * Called when the middleware is handled by the client.
      *
-     * @param callable(RequestInterface, array<string, mixed>): PromiseInterface<ResponseInterface> $handler
+     * @template ReasonType
      *
-     * @return callable(RequestInterface, array<string, mixed>): PromiseInterface<ResponseInterface>
+     * @param callable(RequestInterface, array<string, mixed>): PromiseInterface<ResponseInterface, ReasonType> $handler
+     *
+     * @return callable(RequestInterface, array<string, mixed>): PromiseInterface<ResponseInterface, ReasonType>
      */
     public function __invoke(callable $handler): callable {
         return function(RequestInterface $request, array $options) use ($handler): PromiseInterface {

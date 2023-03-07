@@ -34,6 +34,7 @@
             # Composer and PHP.
             php
             php.packages.composer
+            php.packages.phpstan
           ];
         };
       };

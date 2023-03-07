@@ -23,6 +23,8 @@ jobs:
         include:
           - php: '7.4'
             cs_fixer: true
+          - php: '8.0'
+            phpstan: true
     name: 'Check with PHP ${{ matrix.php }}'
     steps:
       - uses: actions/checkout@v3
@@ -63,3 +65,7 @@ jobs:
 
       - name: Run unit tests
         run: nix-shell --run 'composer test'
+
+      - name: Statically analyze source code
+        if: matrix.phpstan
+        run: nix-shell --run 'composer phpstan'

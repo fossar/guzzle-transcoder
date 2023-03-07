@@ -160,6 +160,8 @@ class Utils {
      *
      *    text/plain; charset="iso-8859/1"
      * @see http://tools.ietf.org/html/rfc5988#section-5
+     *
+     * @param array<array<string, ?string>>|array<string, ?string> $headerValues
      */
     public static function joinHttpHeaderWords(array $headerValues): string {
         if (\count($headerValues) === 0) {
@@ -170,7 +172,7 @@ class Utils {
         if (!\is_array($first)) {
             $headerValues = [$headerValues];
         }
-
+        /** @var array<array<string, ?string>> $headerValues */
         $spaces = '\\s';
         $ctls = '\\x00-\\x1F\\x7F'; //@see http://stackoverflow.com/a/1497928/413531
         $tspecials = '()<>@,;:<>/[\\]?.="\\\\';

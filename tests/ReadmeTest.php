@@ -10,9 +10,13 @@ use GuzzleHttp\Psr7\Response;
 class ReadmeTest extends \PHPUnit\Framework\TestCase {
     public function testReadme(): void {
         $contents = file_get_contents(__DIR__ . '/../README.md');
+        \assert($contents !== false); // For PHPStan.
+
+        $mockedSource = file_get_contents(__DIR__ . '/resources/iso-8859-1.html');
+        \assert($mockedSource !== false); // For PHPStan.
 
         $mock = new MockHandler([
-            new Response(200, ['content-type' => 'text/html; charset=iso-8859-1; someOtherRandom="header in here"'], file_get_contents(__DIR__ . '/resources/iso-8859-1.html')),
+            new Response(200, ['content-type' => 'text/html; charset=iso-8859-1; someOtherRandom="header in here"'], $mockedSource),
         ]);
 
         $contents = str_replace('HandlerStack::create();', 'HandlerStack::create($mock);', $contents);
@@ -23,11 +27,14 @@ class ReadmeTest extends \PHPUnit\Framework\TestCase {
             return $match[1];
         }, $matches);
 
+        $expected1 = file_get_contents(__DIR__ . '/resources/utf-8.html');
+        \assert($expected1 !== false); // For PHPStan.
         $expectations = [
-            file_get_contents(__DIR__ . '/resources/utf-8.html'),
+            $expected1,
         ];
 
         $cases = array_combine($codes, $expectations);
+        \assert($cases !== false); // For PHPStan.
 
         foreach ($cases as $code => $expectation) {
             $this->expectOutputString($expectation);
