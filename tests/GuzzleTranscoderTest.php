@@ -189,36 +189,20 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
                 'replaceContent' => true,
             ]),
         ];
-        foreach ($tests as $name) {
-            $input = __DIR__ . "/resources/iso-8859-1-{$name}";
+        foreach ($tests as $type) {
+            $input = __DIR__ . "/resources/iso-8859-1-{$type}";
             $c = file_get_contents($input);
-            $arr = $this->splitHeadersAndContentFromHttpResponseString($c);
-            $headers = $arr['headers'];
-            $body = $arr['body'];
-            /* @var GuzzleTranscoder */
-            foreach ($converters as $file => $converter) {
-                $expected = __DIR__ . "/resources/utf8-{$name}-{$file}";
+            ['headers' => $headers, 'body' => $body] = $this->splitHeadersAndContentFromHttpResponseString($c);
+
+            foreach ($converters as $converterName => $converter) {
+                $expected = __DIR__ . "/resources/utf8-{$type}-{$converterName}";
                 $c = file_get_contents($expected);
-                $arr = $this->splitHeadersAndContentFromHttpResponseString($c);
-                $expectedHeaders = $arr['headers'];
-                $expectedBody = $arr['body'];
+                ['headers' => $expectedHeaders, 'body' => $expectedBody] = $this->splitHeadersAndContentFromHttpResponseString($c);
                 $res = $converter->convertResponse($headers, $body);
-                $msg = [
-                    "Error in test $name - $file:",
-                    'Input headers    : ' . json_encode($headers),
-                    'Expected headers: ' . json_encode($expectedHeaders),
-                    'Actual headers   : ' . json_encode($res['headers']),
-                ];
-                $msg = implode("\n", $msg);
-                $this->assertEquals($res['headers'], $expectedHeaders, $msg);
-                $msg = [
-                    "Error in test $name - $file:",
-                    "Input body       :\n" . $body . "\n",
-                    "Expected body   :\n" . $expectedBody . "\n",
-                    "Actual body      :\n" . $res['content'] . "\n",
-                ];
-                $msg = implode("\n", $msg);
-                $this->assertEquals($expectedBody, $res['content'], $msg);
+
+                $this->assertNotNull($res, "Unable to convert response for {$type} using {$converterName}.");
+                $this->assertSame($expectedHeaders, $res['headers'], "Response headers do not match for {$type} using {$converterName}.");
+                $this->assertSame($expectedBody, $res['content'], "Response body does not match for {$type} using {$converterName}.");
             }
         }
     }
