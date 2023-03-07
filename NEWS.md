@@ -1,6 +1,6 @@
 # guzzle-transcoder changes
 
-## unreleased
+## 0.3.0 – 2023-03-06
 - Raise minimum PHP version to 7.2.5.
 - Add support for fossar/transcoder 2.0.
 - Improve detection of charset from HTML.
