@@ -27,7 +27,7 @@
     ],
     "scripts": {
         "cs": "php-cs-fixer fix --dry-run",
-        "fix": "php-cs-fixer fix",
+        "fix": "php-cs-fixer fix --verbose --diff",
         "lint": "parallel-lint src",
         "test": "simple-phpunit"
     },
