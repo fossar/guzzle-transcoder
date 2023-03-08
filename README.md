@@ -11,6 +11,9 @@ $ composer require fossar/guzzle-transcoder
 
 ## Basic usage
 
+<!-- Headers: {"content-type": "text/html; charset=iso-8859-1; someOtherRandom=\"header in here\""} -->
+<!-- Mock response: iso-8859-1.html -->
+<!-- Expected: utf-8.html -->
 ```php
 use Fossar\GuzzleTranscoder\GuzzleTranscoder;
 use GuzzleHttp\Client;
