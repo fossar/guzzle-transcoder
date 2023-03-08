@@ -37,7 +37,8 @@ class ContentTypeExtractor {
 
         if (\is_array($contentType)) {
             // Multiple Content-Type headers are not permitted, as the header does not accept a comma-separated list:
-            // https://tools.ietf.org/html/rfc2616#section-4.2
+            // https://www.rfc-editor.org/rfc/rfc2616#section-4.2
+            // https://www.rfc-editor.org/rfc/rfc2616#section-14.17
             // We are attempting to handle it gracefully by dropping all but the first instance.
             $contentType = $contentType[0];
         }

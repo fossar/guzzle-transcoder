@@ -56,7 +56,7 @@ class GuzzleTranscoder {
     public function convert(ResponseInterface $response): ResponseInterface {
         $stream = $response->getBody();
 
-        /** @var array<string, array<string>|string> */
+        /** @var array<string, string[]> */
         $headers = $response->getHeaders();
         $result = $this->convertResponse($headers, (string) $stream);
         if ($result !== null) {
@@ -100,14 +100,13 @@ class GuzzleTranscoder {
      *
      * Otherwise an array containing the new headers and content is returned.
      *
-     * @param array<string, array<string>|string> $headers
+     * @param array<string, string[]> $headers
      *
-     * @return ?array{headers: array<string, array<string>|string>, content: string}
+     * @return ?array{headers: array<string, string[]>, content: string}
      */
     public function convertResponse(array $headers, string $content): ?array {
         $headerDeclaredEncoding = null;
         $bodyDeclaredEncoding = null;
-        /** @var array<string, array<string>|string> */
         $headerReplacements = [];
         $contentReplacements = [];
 
@@ -116,7 +115,7 @@ class GuzzleTranscoder {
         if ($type !== null) {
             [$contentType, $headerDeclaredEncoding, $params] = $type;
 
-            $headerReplacements['content-type'] = $contentType . (\count($params) > 0 ? '; ' . Utils::joinHttpHeaderWords($params) : '');
+            $headerReplacements['content-type'] = [$contentType . (\count($params) > 0 ? '; ' . Utils::joinHttpHeaderWords($params) : '')];
         } else {
             return null;
         }
