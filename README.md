@@ -15,7 +15,7 @@ This package provides a [Guzzle] 6/7 middleware that transparently converts docu
 It is recommended to install the library using [Composer]:
 
 ```ShellSession
-$ composer require fossar/guzzle-transcoder
+composer require fossar/guzzle-transcoder
 ```
 
 ## Usage
