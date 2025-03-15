@@ -1,6 +1,6 @@
 # guzzle-transcoder changes
 
-## 0.3.1 – unreleased
+## 0.3.1 – 2025-03-15
 - Raise minimum PHP version to 7.4.0.
 
 ## 0.3.0 – 2023-03-06
