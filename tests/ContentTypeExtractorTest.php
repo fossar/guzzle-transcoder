@@ -27,8 +27,7 @@ class ContentTypeExtractorTest extends TestCase {
         yield 'HTML5, double quotes' => [
             <<<HTML
                 <meta charset="iso-8859-1">
-HTML
-            ,
+                HTML,
             'iso-8859-1',
             [
                 '<meta charset="iso-8859-1">' => '<meta charset="placeholder-encoding">',
@@ -38,8 +37,7 @@ HTML
         yield 'HTML5, single quotes' => [
             <<<HTML
                 <meta charset='iso-8859-1'>
-HTML
-            ,
+                HTML,
             'iso-8859-1',
             [
                 "<meta charset='iso-8859-1'>" => "<meta charset='placeholder-encoding'>",
@@ -49,8 +47,7 @@ HTML
         yield 'HTML5, unquoted' => [
             <<<HTML
                 <meta charset=iso-8859-1>
-HTML
-            ,
+                HTML,
             'iso-8859-1',
             [
                 '<meta charset=iso-8859-1>' => '<meta charset=placeholder-encoding>',
@@ -60,8 +57,7 @@ HTML
         yield 'HTML5, unquoted, spaces around' => [
             <<<HTML
                 <meta charset = iso-8859-1>
-HTML
-            ,
+                HTML,
             'iso-8859-1',
             [
                 '<meta charset = iso-8859-1>' => '<meta charset=placeholder-encoding>',
@@ -71,8 +67,7 @@ HTML
         yield 'HTML5, unquoted, extra attributes' => [
             <<<HTML
                 <meta foo charset=iso-8859-1 bar baz="2">
-HTML
-            ,
+                HTML,
             'iso-8859-1',
             [
                 '<meta foo charset=iso-8859-1 bar baz="2">' => '<meta foo charset=placeholder-encoding bar baz="2">',
@@ -82,8 +77,7 @@ HTML
         yield 'HTML5, random case' => [
             <<<HTML
                 <MeTA chArSEt="ISo-8859-1">
-HTML
-            ,
+                HTML,
             'ISo-8859-1',
             [
                 '<MeTA chArSEt="ISo-8859-1">' => '<MeTA charset="placeholder-encoding">',
@@ -93,8 +87,7 @@ HTML
         yield '(X)HTML5, unquoted' => [
             <<<HTML
                 <meta charset=iso-8859-1 />
-HTML
-            ,
+                HTML,
             'iso-8859-1',
             [
                 '<meta charset=iso-8859-1 />' => '<meta charset=placeholder-encoding />',
@@ -104,8 +97,7 @@ HTML
         yield '(X)HTML5, tight' => [
             <<<HTML
                 <meta charset="iso-8859-1"/>
-HTML
-            ,
+                HTML,
             'iso-8859-1',
             [
                 '<meta charset="iso-8859-1"/>' => '<meta charset="placeholder-encoding"/>',
@@ -117,8 +109,7 @@ HTML
         yield '(X)HTML5, unquoted, misplaced solidus' => [
             <<<HTML
                 <meta charset=iso-8859-1/>
-HTML
-            ,
+                HTML,
             'iso-8859-1/',
             [
                 '<meta charset=iso-8859-1/>' => '<meta charset=placeholder-encoding>',
@@ -127,9 +118,8 @@ HTML
 
         yield 'HTML4, double quotes' => [
             <<<HTML
-                 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-HTML
-            ,
+                <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+                HTML,
             'ISO-8859-1',
             [
                 '<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">' => '<meta http-equiv="content-type" content="text/html; charset=placeholder-encoding">',
@@ -138,9 +128,8 @@ HTML
 
         yield 'HTML4, double quotes, other way around' => [
             <<<HTML
-                 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-HTML
-            ,
+                <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+                HTML,
             'ISO-8859-1',
             [
                 '<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">' => '<meta content="text/html; charset=placeholder-encoding" http-equiv="content-type">',
@@ -149,9 +138,8 @@ HTML
 
         yield 'HTML4, double quotes, extra attributes, other way around' => [
             <<<HTML
-                 <meta foo="bar" content="text/html; charset=ISO-8859-1" test middle http-equiv="content-type" after='something'>
-HTML
-            ,
+                <meta foo="bar" content="text/html; charset=ISO-8859-1" test middle http-equiv="content-type" after='something'>
+                HTML,
             'ISO-8859-1',
             [
                 '<meta foo="bar" content="text/html; charset=ISO-8859-1" test middle http-equiv="content-type" after=\'something\'>' => '<meta foo="bar" content="text/html; charset=placeholder-encoding" test middle http-equiv="content-type" after=\'something\'>',
@@ -160,9 +148,8 @@ HTML
 
         yield 'HTML4, single quotes' => [
             <<<HTML
-                 <meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>
-HTML
-            ,
+                <meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>
+                HTML,
             'ISO-8859-1',
             [
                 "<meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>" => "<meta http-equiv='content-type' content='text/html; charset=placeholder-encoding'>",
@@ -171,9 +158,8 @@ HTML
 
         yield 'HTML4, unquoted+single quotes' => [
             <<<HTML
-                 <meta http-equiv=content-type content='text/html; charset=ISO-8859-1'>
-HTML
-            ,
+                <meta http-equiv=content-type content='text/html; charset=ISO-8859-1'>
+                HTML,
             'ISO-8859-1',
             [
                 "<meta http-equiv=content-type content='text/html; charset=ISO-8859-1'>" => "<meta http-equiv=content-type content='text/html; charset=placeholder-encoding'>",
@@ -183,9 +169,8 @@ HTML
         // https://httpwg.org/specs/rfc9110.html#field.content-type
         yield 'HTML4, internally quoted, extra parameters' => [
             <<<HTML
-                 <meta http-equiv=content-type content='text/html;foo;charset="ISO-8859-1";bar'>
-HTML
-            ,
+                <meta http-equiv=content-type content='text/html;foo;charset="ISO-8859-1";bar'>
+                HTML,
             'ISO-8859-1',
             [
                 "<meta http-equiv=content-type content='text/html;foo;charset=\"ISO-8859-1\";bar'>" => "<meta http-equiv=content-type content='text/html; foo; charset=placeholder-encoding; bar'>",
@@ -194,9 +179,8 @@ HTML
 
         yield 'HTML4, single quotes+double quotes+spaces around' => [
             <<<HTML
-                 <meta http-equiv =  "content-type" content  	=  "text/html; charset=ISO-8859-1">
-HTML
-            ,
+                <meta http-equiv =  "content-type" content  	=  "text/html; charset=ISO-8859-1">
+                HTML,
             'ISO-8859-1',
             [
                 '<meta http-equiv =  "content-type" content  	=  "text/html; charset=ISO-8859-1">' => '<meta http-equiv =  "content-type" content="text/html; charset=placeholder-encoding">',
@@ -205,9 +189,8 @@ HTML
 
         yield 'HTML4, random case' => [
             <<<HTML
-                 <meTA HTTp-EQuIv="conTeNt-TYpe" CoNTeNt="text/Html; cHArSeT=ISO-8859-1">
-HTML
-            ,
+                <meTA HTTp-EQuIv="conTeNt-TYpe" CoNTeNt="text/Html; cHArSeT=ISO-8859-1">
+                HTML,
             'ISO-8859-1',
             [
                 '<meTA HTTp-EQuIv="conTeNt-TYpe" CoNTeNt="text/Html; cHArSeT=ISO-8859-1">' => '<meTA HTTp-EQuIv="conTeNt-TYpe" content="text/Html; cHArSeT=placeholder-encoding">',
@@ -216,9 +199,8 @@ HTML
 
         yield '(X)HTML4' => [
             <<<HTML
-                 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
-HTML
-            ,
+                <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
+                HTML,
             'ISO-8859-1',
             [
                 '<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>' => '<meta http-equiv="content-type" content="text/html; charset=placeholder-encoding"/>',
@@ -227,11 +209,10 @@ HTML
 
         yield 'multiple declarations' => [
             <<<HTML
-                 <meta http-equiv="content-type" test content="text/html; charset=ISO-8859-1">
-                 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-                 <meta charset=UTF-8>
-HTML
-            ,
+                <meta http-equiv="content-type" test content="text/html; charset=ISO-8859-1">
+                <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+                <meta charset=UTF-8>
+                HTML,
             'ISO-8859-1',
             [
                 '<meta http-equiv="content-type" test content="text/html; charset=ISO-8859-1">' => '<meta http-equiv="content-type" test content="text/html; charset=placeholder-encoding">',

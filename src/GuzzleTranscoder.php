@@ -83,9 +83,7 @@ class GuzzleTranscoder {
         return function(RequestInterface $request, array $options) use ($handler): PromiseInterface {
             $promise = $handler($request, $options);
 
-            return $promise->then(function(ResponseInterface $response): ResponseInterface {
-                return $this->convert($response);
-            });
+            return $promise->then(fn(ResponseInterface $response): ResponseInterface => $this->convert($response));
         };
     }
 
