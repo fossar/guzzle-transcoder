@@ -10,7 +10,7 @@ env:
 
 jobs:
   tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         php:
@@ -27,13 +27,13 @@ jobs:
             phpstan: true
     name: 'Check with PHP ${{ matrix.php }}'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v20
+        uses: cachix/install-nix-action@v31
 
       - name: Set up Nix cache
-        uses: cachix/cachix-action@v12
+        uses: cachix/cachix-action@v16
         with:
           # Use cache from https://github.com/fossar/nix-phps
           name: fossar
@@ -46,7 +46,7 @@ jobs:
         run: |
           echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
