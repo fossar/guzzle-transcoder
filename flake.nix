@@ -34,6 +34,7 @@
             # Composer and PHP.
             php
             php.packages.composer
+            pkgs.phpactor
           ];
         };
       };
