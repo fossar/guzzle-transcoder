@@ -52,7 +52,7 @@ class GuzzleTranscoder {
     public function convert(ResponseInterface $response): ResponseInterface {
         $stream = $response->getBody();
 
-        /** @var array<string, string[]> */
+        /** @var array<string, list<string>> */
         $headers = $response->getHeaders();
         $result = $this->convertResponse($headers, (string) $stream);
         if ($result !== null) {
@@ -77,6 +77,7 @@ class GuzzleTranscoder {
      */
     public function __invoke(callable $handler): callable {
         return function(RequestInterface $request, array $options) use ($handler): PromiseInterface {
+            /** @var array<string, mixed> $options */
             $promise = $handler($request, $options);
 
             return $promise->then(fn(ResponseInterface $response): ResponseInterface => $this->convert($response));
@@ -94,9 +95,9 @@ class GuzzleTranscoder {
      *
      * Otherwise an array containing the new headers and content is returned.
      *
-     * @param array<string, string[]> $headers
+     * @param array<string, list<string>> $headers
      *
-     * @return ?array{headers: array<string, string[]>, content: string}
+     * @return ?array{headers: array<string, list<string>>, content: string}
      */
     public function convertResponse(array $headers, string $content): ?array {
         $headerDeclaredEncoding = null;

@@ -214,7 +214,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
      * Gets the headers from a HTTP response as one dimensional associative array
      * with header names as keys. The header values will not be parsed but saved as-is!
      *
-     * @return array{headers: array<string, string[]>, body: string}
+     * @return array{headers: array<string, list<string>>, body: string}
      */
     private function splitHeadersAndContentFromHttpResponseString(string $responseString): array {
         $lines = explode("\n", $responseString);

@@ -36,8 +36,8 @@ class ReadmeTest extends \PHPUnit\Framework\TestCase {
         foreach ($matches as $match) {
             $mockedSourceBody = file_get_contents(__DIR__ . '/resources/' . $match['response']);
             \assert($mockedSourceBody !== false); // For PHPStan.
+            /** @var array<string, string> $mockedHeaders */
             $mockedHeaders = json_decode($match['headers'], true);
-            \assert(\is_array($mockedHeaders)); // For PHPStan.
             $expectedBody = file_get_contents(__DIR__ . '/resources/' . $match['expected']);
             \assert($expectedBody !== false); // For PHPStan.
 

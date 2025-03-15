@@ -72,7 +72,7 @@ class Utils {
      *    [Basic=>null, realm=>'"foo\bar"']
      *    ["</TheBook/chapter,2>" => null, "rel" => "pre,vious", "title*" => "UTF-8'de'letztes%20Kapitel" ], ["</TheBook/chapter4>" => null, "rel" => "next", "title*" => "UTF-8'de'n%c3%a4chstes%20Kapitel" ]
      *
-     * @param string[]|string $headerValues
+     * @param list<string>|string $headerValues
      *
      * @throws \Exception
      *
