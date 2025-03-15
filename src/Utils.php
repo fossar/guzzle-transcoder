@@ -174,7 +174,7 @@ class Utils {
         }
         /** @var array<array<string, ?string>> $headerValues */
         $spaces = '\\s';
-        $ctls = '\\x00-\\x1F\\x7F'; //@see http://stackoverflow.com/a/1497928/413531
+        $ctls = '\\x00-\\x1F\\x7F'; // @see http://stackoverflow.com/a/1497928/413531
         $tspecials = '()<>@,;:<>/[\\]?.="\\\\';
         $tokenPattern = "#^[^{$spaces}{$ctls}{$tspecials}]+$#";
         $result = [];

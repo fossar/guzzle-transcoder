@@ -1,5 +1,8 @@
 # guzzle-transcoder changes
 
+## 0.3.1 – unreleased
+- Raise minimum PHP version to 7.4.0.
+
 ## 0.3.0 – 2023-03-06
 - Raise minimum PHP version to 7.2.5.
 - Add support for fossar/transcoder 2.0.
