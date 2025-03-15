@@ -8,6 +8,7 @@ $rules = [
     '@Symfony:risky' => true,
     '@PHP74Migration' => true,
     '@PHP74Migration:risky' => true,
+    'phpdoc_to_property_type' => true,
     // 'phpdoc_to_param_type' => true,
     // 'phpdoc_to_return_type' => true,
     'phpdoc_types_order' => false,

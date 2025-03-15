@@ -12,17 +12,13 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class GuzzleTranscoder {
-    /** @var ?TranscoderInterface */
-    private $transcoder;
+    private ?TranscoderInterface $transcoder;
 
-    /** @var string */
-    private $targetEncoding;
+    private string $targetEncoding;
 
-    /** @var bool */
-    private $replaceHeaders;
+    private bool $replaceHeaders;
 
-    /** @var bool */
-    private $replaceContent;
+    private bool $replaceContent;
 
     /**
      * Constructs a class for transcoding Responses.
