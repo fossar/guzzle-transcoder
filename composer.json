@@ -11,7 +11,7 @@
     "require-dev" : {
         "friendsofphp/php-cs-fixer": "^3.0",
         "php-parallel-lint/php-parallel-lint": "^1.0",
-        "symfony/phpunit-bridge": "^6.2",
+        "symfony/phpunit-bridge": "^6.2 || ^7.0",
         "phpstan/phpstan": "^1.12"
     },
     "autoload": {
