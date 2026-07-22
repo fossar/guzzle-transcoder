@@ -5,5 +5,11 @@ parameters:
         - src/
         - tests/
 
-    stubFiles:
-        - utils/PHPStan/Stubs/GuzzlePromises.stub
+    ignoreErrors:
+        -
+            message: '#^PHPDoc tag .+ contains generic type GuzzleHttp\\Promise\\PromiseInterface\<Psr\\Http\\Message\\ResponseInterface, mixed\> but interface GuzzleHttp\\Promise\\PromiseInterface is not generic\.$#'
+            identifier: generics.notGeneric
+            count: 2
+            # Only occurs with guzzle/promises < 3.0.0
+            reportUnmatched: false
+            path: src/GuzzleTranscoder.php

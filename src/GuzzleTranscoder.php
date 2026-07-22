@@ -71,13 +71,12 @@ class GuzzleTranscoder {
      *
      * @template ReasonType
      *
-     * @param callable(RequestInterface, array<string, mixed>): PromiseInterface<ResponseInterface, ReasonType> $handler
+     * @param callable(RequestInterface, array<mixed>): PromiseInterface<ResponseInterface, ReasonType> $handler
      *
-     * @return callable(RequestInterface, array<string, mixed>): PromiseInterface<ResponseInterface, ReasonType>
+     * @return callable(RequestInterface, array<mixed>): PromiseInterface<ResponseInterface, ReasonType>
      */
     public function __invoke(callable $handler): callable {
         return function(RequestInterface $request, array $options) use ($handler): PromiseInterface {
-            /** @var array<string, mixed> $options */
             $promise = $handler($request, $options);
 
             return $promise->then(fn(ResponseInterface $response): ResponseInterface => $this->convert($response));
