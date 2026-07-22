@@ -67,7 +67,7 @@ class GuzzleTranscoderTest extends \PHPUnit\Framework\TestCase {
         }
 
         if ($bodyEncoding !== null) {
-            $content = mb_convert_encoding($content, $bodyEncoding, mb_internal_encoding());
+            $content = (string) mb_convert_encoding($content, $bodyEncoding, mb_internal_encoding());
         }
 
         return new Response($status, $headers, $content);
