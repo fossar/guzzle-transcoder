@@ -2,7 +2,7 @@
 
 [![Packagist Version](https://img.shields.io/packagist/v/fossar/guzzle-transcoder)](https://packagist.org/packages/fossar/guzzle-transcoder)
 
-This package provides a [Guzzle] 6/7 middleware that transparently converts documents obtained by Guzzle from its native encoding to UTF-8 (or any other specified encoding). It supports the following features:
+This package provides a [Guzzle] 6/7/8 middleware that transparently converts documents obtained by Guzzle from its native encoding to UTF-8 (or any other specified encoding). It supports the following features:
 
 - Detection of charset from [`Content-Type`] HTTP header.
 - Detection of charset from [`meta` element] in HTML document.
