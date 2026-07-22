@@ -1,6 +1,6 @@
 # guzzle-transcoder changes
 
-## 0.4.0 – unreleased
+## 0.3.2 – 2026-07-22
 - Add support for Guzzle 8.
 
 ## 0.3.1 – 2025-03-15
